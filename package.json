@@ -1,14 +1,20 @@
 {
   "name": "163-music",
   "version": "1.0.0",
-  "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "leancloud-storage": "^3.13.0"
-  }
+    "leancloud-realtime": "^4.3.0",
+    "leancloud-storage": "^3.13.0",
+    "qiniu": "^7.2.1",
+    "qiniu-js": "^1.0.22"
+  },
+  "devDependencies": {},
+  "keywords": [],
+  "description": ""
 }
