@@ -1,0 +1,55 @@
+*{margin: 0;padding: 0;box-sizing: border-box;}
+*::before{box-sizing: border-box;}
+*::after{box-sizing: border-box;}
+ul,li{list-style: none;}
+a{text-decoration:none;}
+
+body{
+    font-size: 12px;
+}
+
+/* layout */
+.page{
+    display: flex;
+    height: 100vh;
+}
+.page>aside{
+   width:200px; /*固定左半部分宽度*/
+   display: flex;
+   flex-direction: column;
+}
+.page>main{
+    flex-grow: 1; /*占满剩余部分*/
+
+}
+.newSong{
+    text-align: center;
+    padding: 10px;
+}
+.newSong .active{
+    background: #d4d4d4;
+}
+.songList{
+    border-top: 1px solid #ddd;
+    flex-grow: 1;
+}
+.songList>li{
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+}
+.songList>li.active{
+    background: #d4d4d4;
+}
+.uploadArea>.draggable {
+    text-align: center;
+    padding: 20px;
+    border: 2px dashed #ddd;
+    width: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+.uploadArea>.draggable>.clickable{
+    cursor: pointer;
+}
