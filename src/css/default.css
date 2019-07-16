@@ -4,93 +4,207 @@
 ul,li{list-style: none;}
 a{text-decoration:none;}
 input{font: inherit;}
-
+html{
+    height: 100%;
+}
 body{
     font-size: 16px;
-    height: 100vh;
+    height: 100%;
 }
+.icon {
+    width: 2em; height: 2em;
+    vertical-align: -0.5em;
+    fill: currentColor;
+    overflow: hidden;
+    margin: 0 5px;
+ }
 
 /* layout */
+
 .page{
+    height: 100%;
+    display:flex;
+    flex-direction: column;
+}
+
+
+header.topbar{
     display: flex;
-    height: 100vh;
-}
-.page>aside{
-   width:200px; /*固定左半部分宽度*/
-   display: flex;
-   flex-direction: column;
-}
-.page>main{
-    flex-grow: 1; /*占满剩余部分*/
-    background-color: #d4d4d4;
-}
-.newSong{
-    text-align: center;
-    padding: 10px;
-}
-.newSong.active{
-    background:  #d4d4d4;
-}
-.songList-container{
-    flex-grow: 1;
-}
-.songList{
-    border-top: 1px solid #ddd;
+    justify-content: space-between;
+    align-items: center;
+    background: #D43C33;
+    padding: 17px 10px;
+  }
+header.topbar .logo>svg{
+    width: 142px;height: 25px;
+    vertical-align: top;
 
 }
-.songList>li{
-    padding: 10px;
-    border-bottom: 1px solid #ddd;
+
+
+main{
+    display: flex;
+    height:558px;
 }
-.songList>li.active{
+main>aside{
+    width: 18%;
+    display: flex;
+    flex-direction: column;
+    
+}
+
+/* newSong */
+
+
+
+/* song-list */
+
+.songList-container{
+    flex-grow: 1;
+    
+}
+.songList-container{
+    overflow-y: auto;
+    
+}
+.songList>li{
+    position: relative;
+    border-bottom: 1px solid #E2E2E3;
+    display: flex;
+    align-items: center;
+}
+
+.songList>li:before{
+    content: '';
+    display: block;
+    height: 40px;
+    width: 4px;
+    border-radius: 3px;
+    background-color: transparent;
+    flex-shrink: 0;
+}
+.songList>li.active:before{
+    background-color:#D43C33;
+}
+.songList>li>.icon-cd{
+    flex-shrink: 0;
+}
+.songList>li>.song-container{
+    overflow: hidden;
+}
+.songList>li>.song-container>h3{
+    font-size: 16px;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+.songList>li>.song-container>p{
+    font-size: 12px;
+    color: #888;
+}
+
+.songList > li.active{
     background: #d4d4d4;
 }
-.uploadArea>.draggable {
-    text-align: center;
-    padding: 20px;
-    border: 2px dashed #ddd;
-    width: 200px;
+
+
+/* upload */
+
+.uploadArea{
+    border-top:1px solid #ddd;
+    height: 60px;
     display: flex;
     align-items: center;
     justify-content: center;
-    flex-direction: column;
+    font-weight: bold;
+    
 }
-.uploadArea>.draggable>.clickable{
-    cursor: pointer;
-}
-/* main */
-.form{
-    font-size: 14px;
-}
-.form>.row{
-    margin:20px 0;
+.uploadArea .uploadButton{
     display: flex;
-}
-.form>.row>label{
-    width: 4em;
-    display: flex;
-    justify-content: flex-end;
+    justify-content: center;
     align-items: center;
-    margin-right: 5px;
 }
-.form>.row.actions{
-    margin-left: calc(4em + 5px);
+.uploadButton>.icon.addSong{
+    width: 1em; height: 1em;
 }
-.form input[type=text]{
-    padding: 3px 8px;
-    border-radius: 5px;
-    border: 1px solid #ddd;
-    height: 30px;
+.uploadButton>p{
+    font-size: 16px;
+    line-height: 16px;
 }
-.form input[type=button],
-.form input[type=submit],
-.form button{
-  height: 30px;
-  padding-left: 10px;
-  padding-right: 10px;
-  border-radius: 5px;
-}
-.page > main {
-    padding-top: 20px;
+/* songform */
+
+.right-section{
+    flex: 1;
+    height: 100%;
     display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.editArea{
+    border:1px dashed #d4d4d4;
+    padding: 40px 80px;
+    border-radius: 15px;
+}
+.editArea>h1{
+    padding-bottom: 30px;
+}
+.editArea>.form>.row{
+    padding-bottom:20px;
+}
+.editArea>.form>.row:nth-child(2){
+    text-align: right;
+}
+.editArea>.form>.row:last-child{
+    text-align: right;
+    background:transparent;
+    padding-bottom: 10px;
+    
+}
+.editArea>.form>.row:last-child>input{
+    padding: 5px 10px;
+}
+.editArea>.form>.row>input{
+    border: 1px solid #ddd;
+    border-radius: 3px;
+    width: 150px;
+    background:transparent;
+    line-height: 25px;
+}
+/* loading */
+.site-loading{
+    visibility: hidden;
+    background: rgba(0,0,0,0.2);
+    width:100%;
+    height: 100%;
+    position: absolute;
+    top:0;
+    left: 0;
+}
+.site-loading.active{
+    visibility: visible;
   }
+.site-loading::after{
+    content:'';
+    display:block;
+    width: 100px;
+    height: 100px;
+    background: green;
+    position: absolute;
+    top:50%;
+    left:50%;
+    margin-top: -50px;
+    margin-left: -50xp;
+    border-radius: 50px;
+    animation: loading 1s linear  infinite alternate-reverse;
+}
+
+@keyframes loading{
+    0% {
+      transform: scale(1.0);
+    }
+    100% {
+      transform: scale(0.1);
+    }
+  }
+
+

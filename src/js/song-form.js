@@ -1,19 +1,18 @@
 {
     let view = {
-        el: '.page>main',
+        el: '.editArea',
         template: `
-            <h1>新建歌曲</h1>
             <form class="form">
                 <div class="row">
-                    <label>歌名</label>
+                    <label>音乐标题：</label>
                     <input name="name" type="text" value="__name__">
                 </div>
                 <div class="row">
-                    <label>歌手</label>
+                    <label>歌手：</label>
                     <input name="singer" type="text" value="__singer__">
                 </div>
                 <div class="row">
-                    <label>外链</label>
+                    <label>歌曲外链：</label>
                     <input name="url" type="text" value="__url__">
                 </div>
                 <div class="row actions">
@@ -21,86 +20,133 @@
                 </div>
             </form>
         `,
-        init(){
+        init() {
             this.$el = $(this.el)
         },
-        render(data = {}){ //ES6语法：如果data未定义，则data === {}
-            let spaceHolders = ['name','url','singer']
+        render(data = {}) {                                            //接受参数data:{name,singer,url,id}然后去填充form;若data undefined，data === {}
             let html = this.template
-            spaceHolders.map((string)=>{
-               html = html.replace(`__${string}__`,data[string]||'')
+            let spaceHolders = ['name', 'url', 'singer']
+            spaceHolders.map((string) => {
+                html = html.replace(`__${string}__`, data[string] || '')    //更换value
             })
-            $(this.el).html(html) //在所有渲染数据的操作前先渲染template
+            $(this.el).html(html)
+            if(data.id){
+                $(this.el).prepend('<h1>编辑歌曲</h1>')
+              }else{
+                $(this.el).prepend('<h1>新建歌曲</h1>')
+              }
         },
-        reset(){
+        reset() {
             this.render({})
         }
     }
     let model = {
-        data:{name:'',singer:'',url:'',id:''}, //第一次提交后，data:{name:'1',singer:'2',url:'3',id:''}
-        //第二次提交后，data:{name:'2',singer:'3',url:'4',id:''}
-        //在数据库创建新对象
-        //AND!改变model里的data //data为新上传的歌曲的信息
-        create(data){
-            // 声明类型
+        data: { name: '', singer: '', url: '', id: '' },
+        create(data) {                                                //接受一个data:{name,url,singer}，在LeanCloud数据库创建对象
             var Song = AV.Object.extend('Song');
-            // 新建对象
             var song = new Song();
-            // 设置名称
-            song.set('name',data.name);
-            // 设置优先级
-            song.set('url',data.url);
-            song.set('singer',data.singer);
-            return song.save().then((newSong)=>{
-              console.log(newSong);//attributes{}&id
-              let {id,attributes} = newSong
-              Object.assign(this.data,{ //改变model的data
-                  id,
-                  ...attributes,
-                //   ES6语法，相当于以下三行
-                //   name:attributes.name,
-                //   singer:attributes.singer,
-                //   url:attributes.url
-              })
-            }, (error)=> {
-              console.error(error);
+            song.set('name', data.name);
+            song.set('url', data.url);
+            song.set('singer', data.singer);
+            return song.save().then((newSong) => {                    //保存成功->更新model.data
+                let { id, attributes } = newSong
+                Object.assign(this.data, { id, ...attributes })
+            }, (error) => {
+                console.error(error);
+            })
+        },
+        update(data) {
+            var song = AV.Object.createWithoutData('Song', this.data.id);
+            song.set('name', data.name);
+            song.set('url', data.url);
+            song.set('singer', data.singer);
+            return song.save().then((response) => {
+                Object.assign(this.data, data)
+                return response
+            }, (response) => {
+                console.log('更新到数据库失败')
+                console.log(response)
             })
         }
     }
     let controller = {
-        view:null,
-        model:null,
-        init(view,model){
+        view: null,
+        model: null,
+        init(view, model) {
             this.view = view
             this.model = model
             this.view.init()
             this.view.render(this.model.data) //*this.model.data 
             this.bindEvents()
-            window.eventHub.on('upload',(data)=>{ //上传歌曲后云端返回的数据{name:,url:}
-                this.model.data = data //保存到songform的data
-                this.view.render(data)
-            }) //涉及到模块间的交互
-        },
-        bindEvents(){
-            this.view.$el.on('submit','form', (e)=>{ //委托事件，监听form
-                e.preventDefault()                      //阻止默认事件
-                let needs = ['name','url','singer']
-                let data = {} //只在bindEvents()里有效
-                needs.map((string)=>{
-                    data[string]=this.view.$el.find(`[name="${string}"]`).val() //取出input的val存起来
-                })
-                console.log('点击提交按钮后获取的表单数据')
-                console.log(data)
-                this.model.create(data).then(()=>{ //保存到云端的数据库
-                    this.view.reset()               //清空表单
-                    // let string = JSON.stringify(this.model.data)
-                    // let object = JSON.parse(string)   //如何深拷贝一个对象，而不是引用
-                    //window.eventHub.emit('create',object) 
-                }) 
-                window.eventHub.emit('create',data) //data:{name:,url:,singer:} //涉及到模块间的交互
+            this.bindEventHub()
 
+        },
+        create() {
+            let needs = ['name', 'url', 'singer']
+            let data = {}                                                       //收集提交的data:{name,url,singer}
+            needs.map((string) => {
+                data[string] = this.view.$el.find(`[name="${string}"]`).val()
+            })
+            this.model.create(data)
+                .then(() => {                                //将data create到云端,data{name,url,singer,id}
+                    this.view.reset()                                               //->清空表单
+                    window.eventHub.emit('create', this.model.data)
+                })
+        },
+        update() {
+            let needs = ['name', 'url', 'singer']
+            let data = {}                                                       //收集提交的data:{name,url,singer}
+            needs.map((string) => {
+                data[string] = this.view.$el.find(`[name="${string}"]`).val()
+            })
+            this.model.update(data)
+                .then(() => {
+                    console.log('这里不应该有执行')
+                    console.log(this.model.data)
+                    window.eventHub.emit('update', JSON.parse(JSON.stringify(this.model.data)))
+                })
+        },
+        bindEvents() {
+            this.view.$el.on('submit', 'form', (e) => {                                //监听submit按钮
+                e.preventDefault()
+
+                if (this.model.data.id) {
+                    console.log('1')
+                    this.update()
+                } else {
+                    console.log('2')
+                    this.create()
+                }
+
+            })
+        },
+        bindEventHub() {
+            window.eventHub.on('select', (selectedSong) => {
+                console.log('song-form监听到了song-list的select')
+                console.log('selectedSong信息：')
+                console.log(selectedSong)
+                this.model.data = selectedSong //选中歌曲的信息被保存到Model.data里
+                this.view.render(this.model.data)
+            })
+
+            window.eventHub.on('upload', (data) => {               //上传歌曲后云端返回的数据{name:,url:}
+                console.log('song-form监听到了upload的upload')
+                this.model.data = data                              //保存到songform的data
+                this.view.render(data)
+            })                                                      //模块间的交互
+
+
+            window.eventHub.on('new', (data) => {
+                if (this.model.data.id) {
+                    this.model.data = {
+                        name: '', url: '', id: '', singer: ''
+                    }
+                } else {
+                    Object.assign(this.model.data, data)
+                }
+                this.view.render(this.model.data)
             })
         }
     }
-    controller.init(view,model)
+    controller.init(view, model)
 }
