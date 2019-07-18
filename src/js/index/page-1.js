@@ -1,12 +1,34 @@
 {
-    let view={}
+    let view={
+        el:'#page-1',
+        init(){
+            this.$el=$(this.el)
+        },
+        show(){
+            this.$el.show()
+        },
+        hide(){
+            this.$el.hide()
+        }
+    }
     let model={}
     let controller={
         init(view,model){
             this.view =view
+            this.view.init()
             this.model=model
+            this.bindEventHub()
             this.loadModule1()
             this.loadModule2()
+        },
+        bindEventHub(){
+            window.eventHub.on('select',(pageName)=>{
+                if(pageName === '#page-1'){
+                    this.view.show()
+                }else{
+                    this.view.hide()
+                }
+            })
         },
         loadModule1(){
             let script1 = document.createElement('script')
