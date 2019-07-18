@@ -2,18 +2,32 @@ ul,ol{list-style:none;}
 *{box-sizing: border-box;margin: 0;padding: 0;}
 *::after,*::before{box-sizing: border-box}
 a{text-decoration: none;color: inherit;}
-header{
+.icon {
+  width: 1.5em; height: 1.5em;
+  vertical-align: -0.4em;
+  fill: currentColor;
+  overflow: hidden;
+}
+div.sticky{
+  position: fixed;
+  top:0;
+  left: 0;
+  width: 100%;
+}
+.sticky>header{
   display: flex;
   background: #d43c33;
   justify-content: space-between;
   align-items: center;
   padding: 20px 10px;
 }
-.topsvg{
+.sticky>header>div.topsvg{
   width: 142px;
   height: 45px;
+  padding: 10px 0;
 }
-header>a{
+
+.sticky>header>a{
   width: 100px;
   height: 36px;
   font-size: 16px;
@@ -24,25 +38,49 @@ header>a{
   border-radius: 30%/100%;
   background:white;
 }
-nav.menu>ul{
+.sticky>nav.menu>ul{
   display: flex;
-  justify-content: space-around;
   flex-direction: row;
   border-bottom: 1px solid #ddd;
+  background: white;
+  text-align: center;
 }
-nav.menu>ul>li{
-  padding: 10px 5px;
+.sticky>nav.menu>ul>li{
+  flex: 1;
+}
+.sticky>nav.menu>ul>li>.tabtext{
+  line-height: 40px;
   border-bottom:2px solid transparent;
+  padding: 8px 5px;
 }
-nav.menu>ul>li.active{
-  border-bottom:2px solid #d43c33
+.sticky>nav.menu>ul>li.active>.tabtext{
+  border-bottom:2px solid #d43c33;
 }
-.remd_title{
+/* .sticky>nav.menu>ul>li.active .tabtext{
+  position: relative;
+} */
+/* .sticky>nav.menu>ul>li.active .tabtext::after{
+  content:'';
+  display: block;
+  position: absolute;
+  bottom:0;
+  left: 0;
+  height: 2px;
+  width: 100%;
+  background: #d43c33;
+  transform: scaleX(1.1)
+} */
+
+
+.remd_title-1,.remd_title-2{
   border-left:2px solid #d43c33;
   padding:  0 5px;
-  margin: 20px 0;
+  margin: 20px 0 20px;
   font-size: 18px;
   font-weight: normal;
+}
+.remd_title-2{
+  margin: 20px 0;
 }
 section.remd_pl>.pl>ul{
   display: flex;
@@ -57,9 +95,27 @@ section.remd_pl>.pl>ul>li{
 section.remd_pl>.pl>ul>li>img{
   width:100%;
 }
+section.remd_song>ol>li{
+  border-bottom: 1px solid #E2E2E3;
+  padding: 5px 5px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+section.remd_song>ol>li>.song-container>h3{
+  font-size: 16px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  font-weight: normal;
+}
+section.remd_song>ol>li>.song-container>p{
+  font-size: 12px;
+  color: #888;
+}
 footer{
   width: 100%;
-  text-align: center;
+  margin-top: 100px;
 }
 footer>a{
   text-align: center;
@@ -71,11 +127,28 @@ footer>a{
   display: block;
   border-radius: 30px;
 }
-footer>svg{
+footer>div.logosvg{
   width:230px;
   height: 44px;
+  margin: auto;
 }
 footer>p{
   color: #888;
   font-size: 12px;
+}
+
+/* layout */
+#menu-content::before{
+    content:'';
+    display: table;
+}
+#page-1,#page-2,#page-3{
+  margin-top: 126px;
+  width: 100%;
+}
+#page-1{
+  margin-top: 146px;
+}
+#page-2,#page-3{
+  display: none;
 }

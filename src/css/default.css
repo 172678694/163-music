@@ -61,11 +61,9 @@ main>aside{
 
 .songList-container{
     flex-grow: 1;
-    
 }
 .songList-container{
     overflow-y: auto;
-    
 }
 .songList>li{
     position: relative;
