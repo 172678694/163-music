@@ -64,6 +64,8 @@
         getAllSongs(){
             this.model.find().then(()=>{
               this.view.render(this.model.data)
+              console.log('here')
+              console.log(this.model.data)
             })
         },
         bindEvents(){                                       //当点击歌曲时自身高亮&通知song-form展示对应信息

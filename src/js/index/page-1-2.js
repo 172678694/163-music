@@ -12,8 +12,10 @@
                         ${song.singer}
                         </p>
                     </div>
-                    <div class="icon-play"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-play"></use></svg></div>
-                </li>`)
+                    <a href="./song.html?id=${song.id}">
+                        <div class="icon-play"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-play"></use></svg></div>
+                    </a>
+                    </li>`)
                 $(this.el).find('ol.newSongs').append($li)
             })
         }

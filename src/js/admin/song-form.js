@@ -4,7 +4,7 @@
         template: `
             <form class="form">
                 <div class="row">
-                    <label>音乐标题：</label>
+                    <label>歌名：</label>
                     <input name="name" type="text" value="__name__">
                 </div>
                 <div class="row">
@@ -12,8 +12,16 @@
                     <input name="singer" type="text" value="__singer__">
                 </div>
                 <div class="row">
-                    <label>歌曲外链：</label>
+                    <label>外链：</label>
                     <input name="url" type="text" value="__url__">
+                </div>
+                <div class="row">
+                    <label>封面：</label>
+                    <input name="cover" type="text" value="__cover__">
+                </div>
+                <div class="row">
+                    <label>歌词：</label>
+                    <textarea name="lyrics"  cols="80" rows="10">__lyrics__</textarea>
                 </div>
                 <div class="row actions">
                     <input type="submit" value="保存">
@@ -25,7 +33,7 @@
         },
         render(data = {}) {                                            //接受参数data:{name,singer,url,id}然后去填充form;若data undefined，data === {}
             let html = this.template
-            let spaceHolders = ['name', 'url', 'singer']
+            let spaceHolders = ['name', 'url', 'singer','cover','lyrics']
             spaceHolders.map((string) => {
                 html = html.replace(`__${string}__`, data[string] || '')    //更换value
             })
@@ -41,13 +49,15 @@
         }
     }
     let model = {
-        data: { name: '', singer: '', url: '', id: '' },
+        data: { name: '', singer: '', url: '', id: '' ,cover:'',lyrics:''},
         create(data) {                                                //接受一个data:{name,url,singer}，在LeanCloud数据库创建对象
             var Song = AV.Object.extend('Song');
             var song = new Song();
             song.set('name', data.name);
             song.set('url', data.url);
             song.set('singer', data.singer);
+            song.set('cover', data.cover);
+            song.set('lyrics', data.lyrics);
             return song.save().then((newSong) => {                    //保存成功->更新model.data
                 let { id, attributes } = newSong
                 Object.assign(this.data, { id, ...attributes })
@@ -60,6 +70,8 @@
             song.set('name', data.name);
             song.set('url', data.url);
             song.set('singer', data.singer);
+            song.set('cover', data.cover);
+            song.set('lyrics', data.lyrics);
             return song.save().then((response) => {
                 Object.assign(this.data, data)
                 return response
@@ -82,7 +94,7 @@
 
         },
         create() {
-            let needs = ['name', 'url', 'singer']
+            let needs = ['name', 'url', 'singer','cover','lyrics']
             let data = {}                                                       //收集提交的data:{name,url,singer}
             needs.map((string) => {
                 data[string] = this.view.$el.find(`[name="${string}"]`).val()
@@ -94,7 +106,7 @@
                 })
         },
         update() {
-            let needs = ['name', 'url', 'singer']
+            let needs = ['name', 'url', 'singer','cover','lyrics']
             let data = {}                                                       //收集提交的data:{name,url,singer}
             needs.map((string) => {
                 data[string] = this.view.$el.find(`[name="${string}"]`).val()
@@ -139,7 +151,7 @@
             window.eventHub.on('new', (data) => {
                 if (this.model.data.id) {
                     this.model.data = {
-                        name: '', url: '', id: '', singer: ''
+                        name: '', url: '', id: '', singer: '',lyrics:''
                     }
                 } else {
                     Object.assign(this.model.data, data)

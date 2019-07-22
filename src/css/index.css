@@ -38,22 +38,25 @@ div.sticky{
   border-radius: 30%/100%;
   background:white;
 }
-.sticky>nav.menu>ul{
+.tabs-nav{
   display: flex;
   flex-direction: row;
   border-bottom: 1px solid #ddd;
   background: white;
   text-align: center;
 }
-.sticky>nav.menu>ul>li{
+.tabs-nav>li{
   flex: 1;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
 }
-.sticky>nav.menu>ul>li>.tabtext{
+.tabs-nav>li>.tabtext{
   line-height: 40px;
   border-bottom:2px solid transparent;
   padding: 8px 5px;
 }
-.sticky>nav.menu>ul>li.active>.tabtext{
+.tabs-nav>li.active>.tabtext{
   border-bottom:2px solid #d43c33;
 }
 /* .sticky>nav.menu>ul>li.active .tabtext{
@@ -102,6 +105,12 @@ section.remd_song>ol>li{
   align-items: center;
   justify-content: space-between;
 }
+section.remd_song>ol>li>.song-container{
+  overflow: hidden;
+}
+section.remd_song>ol>li>a{
+
+}
 section.remd_song>ol>li>.song-container>h3{
   font-size: 16px;
   white-space: nowrap;
@@ -115,19 +124,29 @@ section.remd_song>ol>li>.song-container>p{
 }
 footer{
   width: 100%;
-  margin-top: 100px;
-}
-footer>a{
+  margin: 70px 0 30px ;
   text-align: center;
-  border: 1px solid #d43c33;
+  background: transparent url(//i.loli.net/2017/08/25/599f862b9c98d.png) no-repeat center;
+  background-size: cover;
+}
+
+footer>a{
   color:#d43c33;
   font-size: 16px;
-  margin: 15px 20px 5px;
-  padding: 10px 50px;
+  margin: 15px 15% 5px;
+  padding: 10px 30px;
   display: block;
   border-radius: 30px;
+  border: 1px solid #d43c33;
+  width:70%;
+  
 }
 footer>div.logosvg{
+ overflow: hidden;
+ text-align: center;
+}
+footer>div.logosvg>svg{
+  display: inline-block;
   width:230px;
   height: 44px;
   margin: auto;
@@ -135,6 +154,7 @@ footer>div.logosvg{
 footer>p{
   color: #888;
   font-size: 12px;
+  transform: scale(.75)
 }
 
 /* layout */
