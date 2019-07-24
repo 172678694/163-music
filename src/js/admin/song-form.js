@@ -66,6 +66,7 @@
             })
         },
         update(data) {
+            //更新对象
             var song = AV.Object.createWithoutData('Song', this.data.id);
             song.set('name', data.name);
             song.set('url', data.url);

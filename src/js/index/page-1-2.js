@@ -29,7 +29,7 @@
             return query.find().then((songs) => {                      //model.find()返回的是一个Promise对象，所以有.then()方法
                 console.log(songs)
                 this.data.songs = songs.map((song) => {                  //songs:[{id,name,url,singer},...]
-                    return { id: song.id, ...song.attributes }
+                    return Object.assign({ id: song.id}, song.attributes)
                 })
                 console.log(this.data.songs)
                 return songs

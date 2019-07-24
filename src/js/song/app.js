@@ -44,8 +44,7 @@
         },
         pause(){
             let audio =  this.$el.find('audio')[0]
-            audio.pause().catch(function(){
-            })
+            audio.pause()
         },
         showLyric(time,lastP){
             let $allP=this.$el.find('.lines>p')
@@ -63,9 +62,11 @@
                     }   
                 }
             }
+            
             $(currentP).addClass('active').siblings('.active').removeClass('active')
             if(currentP!==lastP){
-                window.eventHub.emit('selectP',$allP[i])
+                window.eventHub.emit('selectP',currentP)
+                
                 this.$el.find('.lines').css('transform',`translateY(${-(24*i-24)}px)`)
             }
         }             

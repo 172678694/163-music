@@ -23,3 +23,5 @@ MVC 缺点：代码耦合
         console.log(i+5)
     }
     f1(1) //6
+
+    .trim() 
